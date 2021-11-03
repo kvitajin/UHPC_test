@@ -245,7 +245,6 @@ void solve(int M, int N, double epsilon, const char *output_filename)
         << "  " << diff << "\n";
     cout << "\n";
     cout << "  Error tolerance achieved.\n";
-    cout << "  CPU time = " << ctime << "\n";
     // 
     //  Write the solution to the output file.
     //
