@@ -3,8 +3,7 @@
 equation in a 2D rectangular region, and is intended as a starting point
 for implementing an OpenMP parallel version.
 
-The final estimate of the solution is written to a file in a format
-suitable for display by GRID\_TO\_BMP.
+The final estimate of the solution is written to a file.
 
 The sequential version of this program needs approximately 18/epsilon
 iterations to complete.
@@ -56,8 +55,12 @@ If this process is repeated often enough, the difference between
 successive estimates of the solution will go to zero.
 
 This program carries out such an iteration, using a tolerance specified
-by the user, and writes the final estimate of the solution to a file
-that can be used for graphic processing.
+by the user, and writes the final estimate of the solution to a file.
+
+Usage of the application: `heatedplate use_case`\
+&nbsp;`heatedplate 0` (tiny)\
+&nbsp;`heatedplate 1` (small)\
+&nbsp;`heatedplate 2` (large)
 
 ## STEP 0: Create git repository (10%)
 
@@ -69,7 +72,7 @@ Provide compilation script for your application (the script should run independe
 
 ## STEP 2:  Analysis of the application (10%)
 
-Use `Arm map` (module Forge) to analyze a sequential run of your application with given use case (`tests/large`). Identify the most time consuming regions that can be parallelized by OpenMP.
+Use `Arm map` (module Forge) to analyze a sequential run of your application with given use case (`large`). Identify the most time consuming regions that can be parallelized by OpenMP.
 
 ## STEP 3:  Use OpenMP to run the application in parallel (10%)
 
@@ -84,8 +87,7 @@ Create script that automatically check correctness of your application for at le
 1. Implement time measurement for all parallel regions using omp_get_wtime(). 
 2. Create script for run strong scalability measurement (PBS script).
 3. Evaluate strong scalability of measured regions up to 128 threads and different thread affinity (compact, scatter, balanced, none).
-4. Evaluate behaviour for domain specific parameters of your applications (project dependent, maybe none). (Blocking implementation for this project)
-5. Prepare charts for all measurements.
+4. Prepare charts for all measurements.
 
 ## STEP 6:  Presentation of your project (10%)
 
