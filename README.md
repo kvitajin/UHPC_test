@@ -64,7 +64,7 @@ Usage of the application: `heatedplate use_case`\
 
 ## STEP 0: Create git repository (10%)
 
-Your code should be forked from this repository and hosted on code.it4i.cz as a private project with access for all teachers.
+Your code should be forked from this repository and hosted on code.it4i.cz as a private project with reporter access for all teachers (bes0030, vys0053, jansik, lriha, mec059, milanjaros, vav0038).
 
 ## STEP 1:  Building the library (10%)
 
@@ -92,3 +92,5 @@ Create script that automatically check correctness of your application for at le
 ## STEP 6:  Presentation of your project (10%)
 
 Prepare presentation in form of slides (pptx, pdf). The slides should address all topics requested above.
+
+The presentation (pdf) as well as all other modifications, and outputs push to your git repository.
