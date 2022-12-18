@@ -1,0 +1,6 @@
+/home/kvitajin/Codes/heatedplate/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/kvitajin/Codes/heatedplate/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/kvitajin/Codes/heatedplate/cmake-build-debug/src/CMakeFiles/main.dir
+/home/kvitajin/Codes/heatedplate/cmake-build-debug/src/CMakeFiles/heated_plate.dir
+/home/kvitajin/Codes/heatedplate/cmake-build-debug/src/CMakeFiles/edit_cache.dir
+/home/kvitajin/Codes/heatedplate/cmake-build-debug/src/CMakeFiles/rebuild_cache.dir

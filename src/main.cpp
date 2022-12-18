@@ -1,4 +1,5 @@
 #include "heated_plate.h"
+#include <omp.h>
 
 int main(int argc, char* argv[])
 {

@@ -1,4 +1,5 @@
 #include "heated_plate.h"
+#include <omp.h>
 
 //****************************************************************************80
 
@@ -116,7 +117,7 @@ void solve(int M, int N, double epsilon, const char *output_filename)
     int success;
     double **u;
     double **w;
-
+    double wtime=omp_get_wtime();
     //Alloc memory
     w = new double* [M];
     u = new double* [M];
@@ -147,17 +148,11 @@ void solve(int M, int N, double epsilon, const char *output_filename)
     for (i = 1; i < M - 1; i++)
     {
         w[i][0] = 100.0;
-    }
-    for (i = 1; i < M - 1; i++)
-    {
         w[i][N - 1] = 100.0;
     }
     for (j = 0; j < N; j++)
     {
         w[M - 1][j] = 100.0;
-    }
-    for (j = 0; j < N; j++)
-    {
         w[0][j] = 0.0;
     }
     //
@@ -167,24 +162,18 @@ void solve(int M, int N, double epsilon, const char *output_filename)
     mean = 0.0;
     for (i = 1; i < M - 1; i++)
     {
-        mean = mean + w[i][0];
-    }
-    for (i = 1; i < M - 1; i++)
-    {
-        mean = mean + w[i][N - 1];
+        mean = mean + w[i][0] + w[i][N - 1];
     }
     for (j = 0; j < N; j++)
     {
-        mean = mean + w[M - 1][j];
-    }
-    for (j = 0; j < N; j++)
-    {
-        mean = mean + w[0][j];
+        mean = mean + w[M - 1][j] + w[0][j];
     }
     mean = mean / (double)(2 * M + 2 * N - 4);
     // 
     //  Initialize the interior solution to the mean value.
     //
+#pragma omp parallel for simd collapse(2) firstprivate(w, u) private(i, j) shared(mean)
+
     for (i = 1; i < M - 1; i++)
     {
         for (j = 1; j < N - 1; j++)
@@ -202,43 +191,43 @@ void solve(int M, int N, double epsilon, const char *output_filename)
     cout << " Iteration  Change\n";
     cout << "\n";
 
-    while (epsilon <= diff)
-    {
-        //
-        //  Save the old solution in U.
-        //
-        for (i = 0; i < M; i++)
-        {
-            for (j = 0; j < N; j++)
-            {
-                u[i][j] = w[i][j];
-            }
-        }
-        //
-        //  Determine the new estimate of the solution at the interior points.
-        //  The new solution W is the average of north, south, east and west neighbors.
-        //
-        diff = 0.0;
-        for (i = 1; i < M - 1; i++)
-        {
-            for (j = 1; j < N - 1; j++)
-            {
-                w[i][j] = (u[i - 1][j] + u[i + 1][j] + u[i][j - 1] + u[i][j + 1]) / 4.0;
+        while (epsilon <= diff) {
+            //
+            //  Save the old solution in U.
+            //
+            diff = 0.0;
 
-                if (diff < fabs(w[i][j] - u[i][j]))
-                {
-                    diff = fabs(w[i][j] - u[i][j]);
+#pragma omp parallel for simd collapse(2) firstprivate(w, u)
+            for (i = 0; i < M; i++) {
+                for (j = 0; j < N; j++) {
+                    u[i][j] = w[i][j];
                 }
             }
+            //
+            //  Determine the new estimate of the solution at the interior points.
+            //  The new solution W is the average of north, south, east and west neighbors.
+            //
+            diff = 0.0;
+#pragma omp parallel for simd collapse(2)
+            for (i = 1; i < M - 1; i++) {
+                for (j = 1; j < N - 1; j++) {
+
+                    w[i][j] = (u[i - 1][j] + u[i + 1][j] + u[i][j - 1] + u[i][j + 1])*0.25;
+
+                    if (diff < fabs(w[i][j] - u[i][j])) {
+                        diff = fabs(w[i][j] - u[i][j]);
+                    }
+                }
+            }
+
+
+            iterations++;
+            if (iterations == iterations_print) {
+                cout << "  " << setw(8) << iterations
+                     << "  " << diff << "\n";
+                iterations_print = 2 * iterations_print;
+            }
         }
-        iterations++;
-        if (iterations == iterations_print)
-        {
-            cout << "  " << setw(8) << iterations
-                << "  " << diff << "\n";
-            iterations_print = 2 * iterations_print;
-        }
-    }
 
     cout << "\n";
     cout << "  " << setw(8) << iterations
@@ -281,5 +270,8 @@ void solve(int M, int N, double epsilon, const char *output_filename)
 
     delete[] w;
     delete[] u;
+    double time= omp_get_wtime()-wtime;
+    printf("Time: %f, threads: %d\n", time, omp_get_max_threads());
+
 }
 //****************************************************************************80

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libheated_plate.a CMakeFiles/heated_plate.dir/heated_plate.cpp.o
+/usr/bin/ranlib libheated_plate.a

@@ -1,0 +1,11 @@
+#! /bin/bash
+
+cmake -S. -Bbuild
+cmake --build build
+touch omp_scaling_test_results
+for j in 1 2 4 8 16 32 64 128;do
+  for i in `seq 1 2`; do
+      export OMP_NUM_THREADS=$j
+      ./build/main $1 | grep "Time" #| awk '{print $2, $4}' >> omp_scaling_test_results
+  done
+done

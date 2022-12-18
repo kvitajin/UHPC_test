@@ -1,0 +1,8 @@
+#! /bin/bash
+
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Debug
+cmake --build build
+export KMP_AFFINITY=granularity=fine, compact
+
+time ./build/main $1
+
